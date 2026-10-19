@@ -6,4 +6,4 @@
 - [x] Verify map-independent flows and tests; live Maps requires an authorized origin
 - [x] Apply supplied video-led design while preserving audio guide functionality
 - [x] Verify desktop/mobile design and existing tests
-- [ ] Send current changes to GitHub ai-audio-guide5
+- [x] Send current changes to GitHub ai-audio-guide5
