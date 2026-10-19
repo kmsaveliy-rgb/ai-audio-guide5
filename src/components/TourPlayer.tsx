@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Loader2, Pause, Play, RotateCcw, ArrowLeft }
 import type { Tour } from "@/lib/tour-schema";
 import { getAudioConfig, synthesizeStop } from "@/lib/audio.functions";
 import { audioCacheText, audioKey, getAudio, putAudio } from "@/lib/storage";
+import { LocationMap } from "@/components/LocationMap";
 
 type State = "idle" | "loading" | "playing" | "paused" | "ended";
 
@@ -14,7 +15,7 @@ export function TourPlayer({ tour, onBack, backLabel = "Новая экскур�
   const [voice, setVoice] = useState<string | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
   const busy = useRef(false);
-  const stop = tour.stops[i]!;
+  const stop = tour.stops[i] ?? tour.stops[0];
 
   useEffect(() => {
     getAudioConfig().then((c) => setVoice(c.voiceId)).catch(() => setVoice("default"));
@@ -25,8 +26,8 @@ export function TourPlayer({ tour, onBack, backLabel = "Новая экскур�
     audio.current = null;
     setState("idle");
     setError(null);
-    if (voice) audioKey(audioCacheText(voice, stop.narration)).then(getAudio).then((a) => setCached(!!a));
-  }, [i, stop.narration, voice]);
+    if (voice && stop) audioKey(audioCacheText(voice, stop.narration)).then(getAudio).then((a) => setCached(!!a));
+  }, [i, stop?.narration, voice]);
 
   useEffect(() => () => audio.current?.pause(), []);
 
@@ -42,6 +43,7 @@ export function TourPlayer({ tour, onBack, backLabel = "Новая экскур�
   }
 
   async function doLoad(): Promise<HTMLAudioElement | null> {
+    if (!stop) return null;
     setState("loading");
     setError(null);
     const key = await audioKey(audioCacheText(voice ?? "default", stop.narration));
@@ -84,6 +86,8 @@ export function TourPlayer({ tour, onBack, backLabel = "Новая экскур�
     el.currentTime = 0;
     await el.play();
   }
+
+  if (!stop) return null;
 
   return (
     <div className="space-y-5">
@@ -167,6 +171,7 @@ export function TourPlayer({ tour, onBack, backLabel = "Новая экскур�
       <p className="text-xs text-muted-foreground">
         Текст создан ИИ и не проверялся по источникам. Сверяйте даты, маршруты и часы работы перед поездкой.
       </p>
+      <LocationMap />
     </div>
   );
 }

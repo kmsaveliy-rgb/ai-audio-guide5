@@ -11,3 +11,5 @@
 
 - Groq (text) and ElevenLabs (speech) are called only from server functions in src/lib/*.functions.ts using server env keys; keys never reach the browser.
 - Saved tours and stop audio are cached in browser IndexedDB (src/lib/storage.ts), keyed by hash of voice ID + narration, so audio is never regenerated.
+- Maps use a shared browser-only Google Maps loader and LocationMap with user-triggered GPS and session-only manual pins; tour text is never treated as verified coordinates.
+- The home-page video introduction is a separate presentation component; its primary action scrolls to the existing tour form so generation logic stays independent of presentation.
