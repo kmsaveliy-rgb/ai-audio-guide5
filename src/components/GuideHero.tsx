@@ -1,29 +1,12 @@
-import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Headphones, Map, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import videoAsset from "@/assets/guide-hero.mp4.asset.json";
-import compatibleVideo from "@/assets/guide-hero.webm.asset.json";
-import poster from "@/assets/guide-poster.jpg.asset.json";
+import heroPhoto from "@/assets/hero-pavilion.png.asset.json";
 
 export function GuideHero() {
-  const video = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    const element = video.current;
-    if (!element) return;
-    element.muted = true;
-    const resume = () => { void element.play().catch(() => {}); };
-    resume();
-    element.addEventListener("pause", resume);
-    return () => element.removeEventListener("pause", resume);
-  }, []);
-
   return (
     <section className="guide-hero">
-      <video ref={video} poster={poster.url} autoPlay muted loop playsInline preload="none" className="guide-video" aria-hidden="true">
-        <source src={compatibleVideo.url} type="video/webm" />
-        <source src={videoAsset.url} type="video/mp4" />
-      </video>
+      <img src={heroPhoto.url} alt="" className="guide-photo" aria-hidden="true" />
       <div className="guide-fade" aria-hidden="true" />
       <div className="guide-vignette" aria-hidden="true" />
       <div className="guide-stars" aria-hidden="true">{Array.from({ length: 6 }, (_, i) => <i key={i} />)}</div>
